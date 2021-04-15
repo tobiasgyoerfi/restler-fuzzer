@@ -213,19 +213,16 @@ module private Parameters =
                                                      if schema.IsArray then
                                                          raise (Exception("Arrays in path examples are not supported yet."))
                                                      else
-                                                         let exampleFromSwaggerSpec =
-                                                             // Check for path examples in the Swagger specification
-                                                             if isNull schema.Example then None
-                                                             else
-                                                                Some (schema.Example.ToString())
+                                                        // Check for path examples in the Swagger specification
+                                                        let specExampleValue = SchemaUtilities.tryGetSchemaExampleAsString schema
 
-                                                         getFuzzableValueForProperty ""
+                                                        getFuzzableValueForProperty ""
                                                                                      schema
                                                                                      true (*IsRequired*)
                                                                                      false (*IsReadOnly*)
                                                                                      (tryGetEnumeration schema)
                                                                                      (tryGetDefault schema)
-                                                                                     exampleFromSwaggerSpec
+                                                                                     specExampleValue
 
                                                 Some { name = parameterName
                                                        payload = LeafNode leafProperty
